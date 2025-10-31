@@ -83,3 +83,36 @@ ALTER TABLE "Loan" ADD CONSTRAINT "Loan_memberId_fkey" FOREIGN KEY ("memberId") 
 
 -- AddForeignKey
 ALTER TABLE "Loan" ADD CONSTRAINT "Loan_bookId_fkey" FOREIGN KEY ("bookId") REFERENCES "Book"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- Author
+ALTER TABLE "Author"
+  ADD COLUMN "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  ADD COLUMN "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+-- Book
+ALTER TABLE "Book"
+  ADD COLUMN "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  ADD COLUMN "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+-- Member
+ALTER TABLE "Member"
+  ADD COLUMN "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  ADD COLUMN "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+-- Loan
+ALTER TABLE "Loan"
+  ADD COLUMN "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  ADD COLUMN "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE "Book"
+  ALTER COLUMN "totalCopies" SET DEFAULT 1,
+  ALTER COLUMN "availableCopies" SET DEFAULT 1;
+
+-- Filtros em Books
+CREATE INDEX "Book_title_idx" ON "Book"("title");
+CREATE INDEX "Book_authorId_idx" ON "Book"("authorId");
+CREATE INDEX "Book_categoryId_idx" ON "Book"("categoryId");
+CREATE INDEX "Book_availableCopies_idx" ON "Book"("availableCopies");
+
+-- Relatório de atrasos
+CREATE INDEX "Loan_dueDate_idx" ON "Loan"("dueDate");

@@ -10,7 +10,7 @@ datasource db {
 }
 
 /**
- * Deixe o enum em múltiplas linhas para evitar erro de colagem
+ * Enum em múltiplas linhas para evitar erro de colagem
  */
 enum LoanStatus {
   OPEN
@@ -19,56 +19,71 @@ enum LoanStatus {
 }
 
 model Author {
-  id        Int     @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String
   country   String?
   birthYear Int?
   bio       String?
   books     Book[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Category {
-  id          Int      @id @default(autoincrement())
-  name        String   @unique
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
   description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   books       Book[]
 }
 
 model Book {
-  id              Int      @id @default(autoincrement())
+  id              Int       @id @default(autoincrement())
   title           String
-  isbn            String   @unique
+  isbn            String    @unique
   publishedYear   Int
-  totalCopies     Int
-  availableCopies Int
+  totalCopies     Int       @default(1)
+  availableCopies Int       @default(1)
   authorId        Int
   categoryId      Int
-  author          Author   @relation(fields: [authorId], references: [id])
-  category        Category @relation(fields: [categoryId], references: [id])
+  author          Author    @relation(fields: [authorId], references: [id])
+  category        Category  @relation(fields: [categoryId], references: [id])
   loans           Loan[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([title])
+  @@index([authorId])
+  @@index([categoryId])
+  @@index([availableCopies])
 }
 
 model Member {
-  id           Int      @id @default(autoincrement())
+  id           Int       @id @default(autoincrement())
   fullName     String
-  email        String   @unique
-  phone        String
-  registeredAt DateTime @default(now())
-  isActive     Boolean  @default(true)
+  email        String    @unique
+  phone        String?   // <- opcional
+  registeredAt DateTime  @default(now())
+  isActive     Boolean   @default(true)
   loans        Loan[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }
 
 model Loan {
-  id         Int        @id @default(autoincrement())
+  id         Int         @id @default(autoincrement())
   memberId   Int
   bookId     Int
-  loanDate   DateTime   @default(now())
+  loanDate   DateTime    @default(now())
   dueDate    DateTime
   returnDate DateTime?
-  status     LoanStatus @default(OPEN)
-  fineCents  Int        @default(0)
-  member     Member     @relation(fields: [memberId], references: [id])
-  book       Book       @relation(fields: [bookId], references: [id])
+  status     LoanStatus  @default(OPEN)
+  fineCents  Int         @default(0)
+  member     Member      @relation(fields: [memberId], references: [id])
+  book       Book        @relation(fields: [bookId], references: [id])
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@index([dueDate])
 }
